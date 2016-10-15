@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Dodge</title>
+		<style>
+#game-container{position:relative;width:90%;margin:0 auto;}
+#ui-best-score {
+	color: white;
+	position:absolute;
+	margin:0;
+	left:5px;
+	top:5px;
+	font-size: 1.3em;
+	text-shadow:
+		1px 1px black,
+		-1px 1px black,
+		1px -1px black,
+		-1px -1px black,
+		3px 3px 3px black;
+}
+#game-canvas{background:black;display:block;width:100%}</style>
+	</head>
+	<body>
+		<div id="game-container">
+			<canvas id="game-canvas"></canvas>
+			<p id="ui-best-score">Best score: <span id="game-best-score"></span></p>
+		</div>
+		<script src="vendor/jquery-2.2.3.min.js"></script>
+		<script src="vendor/gl-matrix-2.3.2.js"></script>
+		<script src="build/yaje.min.js"></script>
+		<script src="src/entity2d.js"></script>
+		<script src="src/player.js"></script>
+		<script src="src/enemy.js"></script>
+		<script src="src/dodge.js"></script>
+	</body>
+</html>
