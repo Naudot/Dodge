@@ -67,8 +67,11 @@ class Game {
 		this.updateScore();
 		this.updateEnemyPop();
 
-		for (let x = 0; x < entities.length; ++x)
+		for (let x = 0; x < entities.length; ++x) {
 			entities[x].update(graphics, clock);
+			if (entities[x].sprite.position[1] > graphics.canvas.height)
+				entities.splice(x++, 1);
+		}
 
 		this.draw();
 	}
