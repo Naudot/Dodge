@@ -5,6 +5,7 @@ class Player extends Entity2D {
         super(sprite);
         
 		this.life = 10;
+        this.invincibleCounter = 0;
 
 		input = new Yaje.Input(document, document.getElementById('game-canvas'));
     }
@@ -42,5 +43,13 @@ class Player extends Entity2D {
     }
     update(graphics, clock) {
         this.handleInputs(graphics, clock);
+		
+        if (this.invincibleCounter > 0) {
+            this.invincibleCounter -= clock.deltaTime;
+            if (this.invincibleCounter <= 0) {
+                this.invincibleCounter = 0;
+				this.sprite.setColor(1.0, 1.0, 1.0, 1.0);
+            }
+        }
     }
 }

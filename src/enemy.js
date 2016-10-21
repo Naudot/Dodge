@@ -2,12 +2,15 @@ var ColorEnum = Object.freeze( {
     WHITE: 0,
     RED: 1, 
     GREEN: 2, 
-    BLUE: 3
+    BLUE: 3,
+    YELLOW: 4
 });
 
 class Enemy extends Entity2D {
     constructor(sprite) {
         super(sprite);
+
+        this.goingLeft = true;
 
         this.currentColor = ColorEnum.WHITE;
 
@@ -21,28 +24,49 @@ class Enemy extends Entity2D {
         } else if (rand < 0.15) {
             this.currentColor = ColorEnum.BLUE;
             this.sprite.setColor(0.3, 0.3, 1.0, 1.0);
+        } else if (rand < 0.16) {
+            this.currentColor = ColorEnum.YELLOW;
+            this.sprite.setColor(1.0, 1.0, 0.3, 1.0);
         }
     }
     update(graphics, clock) {
-        this.sprite.move(0, 500 * clock.deltaTime);
+        let deltaX = 0;
+        if (this.currentColor == ColorEnum.YELLOW) {
+            deltaX = 1000;
+            if (this.goingLeft)
+                deltaX = -1000;
+            if (this.sprite.position[0] < 0)
+                this.goingLeft = false;
+            else if (this.sprite.position[0] + this.sprite.width > graphics.width)
+                this.goingLeft = true;
+        }
+
+        this.sprite.move(deltaX * clock.deltaTime, 500 * clock.deltaTime);
         this.sprite.rotate(360 * clock.deltaTime);
     }
     collideWith(playerEntity, score) {
         let scoreCount = 0;
+        let lifeDelta = 0;
 
 		if (this.currentColor === ColorEnum.RED) {
             scoreCount = 2.5
-			playerEntity.life += 1;
+			lifeDelta += 1;
         } else if (this.currentColor === ColorEnum.GREEN) {
 			scoreCount = 5;
         } else if (this.currentColor === ColorEnum.BLUE) {
-			scoreCount = 10;
-			playerEntity.life -= 2;
-        } else {
+			scoreCount = 12;
+			lifeDelta -= 2;
+        } else if (this.currentColor === ColorEnum.YELLOW) {
+            playerEntity.invincibleCounter = 5.0;
+            playerEntity.sprite.setColor(1.0, 1.0, 0.3, 1.0);
+        } else if (this.currentColor === ColorEnum.WHITE) {
 			scoreCount = -1;
-			playerEntity.life -= 1;
+			lifeDelta -= 1;
         }
         
+        if (playerEntity.invincibleCounter == 0)
+            playerEntity.life += lifeDelta;
+
         return scoreCount;
     }
 }
