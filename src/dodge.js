@@ -1,7 +1,5 @@
 'use strict';
 
-var game;
-
 var graphics;
 var clock;
 var texture;
@@ -11,7 +9,7 @@ var entities = [];
 var scoreUpdate = 0;
 var lastPoped = 0;
 
-class Game {
+class Dodge {
 	constructor() {
 		this.storage = new Yaje.Storage('dodge');
 		if (!this.storage.best)
@@ -41,6 +39,9 @@ class Game {
 		let enemy_entity = new Enemy(enemy_sprite);
 		entities.push(enemy_entity);
 	}
+	removeEnemy(enemyIndex) {
+		entities.splice(enemyIndex++, 1);
+	}
 	updateEnemyPop() {
 		lastPoped += clock.deltaTime;
 		if (lastPoped > 0.02) {
@@ -69,8 +70,12 @@ class Game {
 
 		for (let x = 0; x < entities.length; ++x) {
 			entities[x].update(graphics, clock);
+
+			if (entities[x] != player_entity && player_entity.boxCollider.intersectWith(entities[x].boxCollider))
+				this.removeEnemy(x);
+
 			if (entities[x].sprite.position[1] > graphics.canvas.height)
-				entities.splice(x++, 1);
+				this.removeEnemy(x);
 		}
 
 		this.draw();
@@ -99,9 +104,3 @@ class Game {
 	}
 }
 
-$(function () {
-	game = new Game();
-	game.start();
-	window.addEventListener('resize', game.resizeCanvas);
-	game.resizeCanvas();
-});
