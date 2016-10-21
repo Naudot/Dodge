@@ -3,6 +3,5 @@ class Entity2D {
 		this.sprite = sprite;
 		this.boxCollider = new Yaje.BoxCollider(sprite, 0, 0, sprite.width, sprite.height);
 	}
-	update(graphics, clock) {
-	}
+	update(graphics, clock) { }
 }

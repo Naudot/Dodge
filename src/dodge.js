@@ -40,6 +40,15 @@ class Dodge {
 			requestAnimationFrame(() => this.update());
 		}
 	}
+	restart() {
+		entities.splice(0, entities.length);
+		entities.push(playerEntity);
+		playerEntity.life = 10;
+		playerEntity.sprite.setPosition(600, 600);
+		timeUpdate = 0;
+		scoreUpdate = 0;
+		isLost = false;
+	}
 
 	/*
 	Entities handling
@@ -84,6 +93,8 @@ class Dodge {
 		if (playerEntity.life <= 0) {
 			playerEntity.life = 0;
 			isLost = true;
+			document.getElementById('game-message').style.display = 'inline';
+			document.getElementById('restart').style.display = 'inline';
 		}
 	}
 
@@ -91,7 +102,7 @@ class Dodge {
 	Ui Handling
 	*/
 	updatePlayerLife() {
-		$("#game-player-life").text(playerEntity.life);
+		$('#game-player-life').text(playerEntity.life);
 	}
 	updateScore() {
 		// Time
@@ -104,8 +115,8 @@ class Dodge {
 			this.storage.save();
 		}
 
-		$("#game-current-time").text(Math.round(timeUpdate) + " second" + (Math.round(timeUpdate) > 1 ? "s" : ""));
-		$("#game-best-time").text(Math.round(bestTime) + " second" + (Math.round(bestTime) > 1 ? "s" : ""));
+		$('#game-current-time').text(Math.round(timeUpdate) + ' second' + (Math.round(timeUpdate) > 1 ? 's' : ''));
+		$('#game-best-time').text(Math.round(bestTime) + ' second' + (Math.round(bestTime) > 1 ? 's' : ''));
 
 		// Score
 		let bestScore = this.storage.bestScore;
@@ -115,8 +126,8 @@ class Dodge {
 			this.storage.save();
 		}
 		
-		$("#game-current-score").text(Math.round(scoreUpdate) + " point" + (Math.round(scoreUpdate) > 1 ? "s" : ""));
-		$("#game-best-score").text(Math.round(bestScore) + " point" + (Math.round(bestScore) > 1 ? "s" : ""));
+		$('#game-current-score').text(Math.round(scoreUpdate) + ' point' + (Math.round(scoreUpdate) > 1 ? 's' : ''));
+		$('#game-best-score').text(Math.round(bestScore) + ' point' + (Math.round(bestScore) > 1 ? 's' : ''));
 	}
 
 	/*
@@ -127,9 +138,7 @@ class Dodge {
 		input.update();
 		clock.update();
 
-		if (isLost) {
-			$("#game-message").text("Lost!");
-		} else {
+		if (!isLost) {
 			this.updateEntities();
 			this.updateScore();
 		}
