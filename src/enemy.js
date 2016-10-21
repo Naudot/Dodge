@@ -44,21 +44,26 @@ class Enemy extends Entity2D {
         this.sprite.move(deltaX * clock.deltaTime, 500 * clock.deltaTime);
         this.sprite.rotate(360 * clock.deltaTime);
     }
-    collideWith(playerEntity, score) {
+    collideWith(playerEntity, sound) {
         let scoreCount = 0;
         let lifeDelta = 0;
+        let soundToPlay = 'pepSound1';
 
 		if (this.currentColor === ColorEnum.RED) {
             scoreCount = 2.5
 			lifeDelta += 1;
+            soundToPlay = 'pepSound3';
         } else if (this.currentColor === ColorEnum.GREEN) {
 			scoreCount = 5;
+            soundToPlay = 'pepSound3';
         } else if (this.currentColor === ColorEnum.BLUE) {
-			scoreCount = 12;
+			scoreCount = 15;
 			lifeDelta -= 2;
+            soundToPlay = 'pepSound3';
         } else if (this.currentColor === ColorEnum.YELLOW) {
             playerEntity.invincibleCounter = 5.0;
             playerEntity.sprite.setColor(1.0, 1.0, 0.3, 1.0);
+            soundToPlay = 'phaserUp4';
         } else if (this.currentColor === ColorEnum.WHITE) {
 			scoreCount = -1;
 			lifeDelta -= 1;
@@ -66,6 +71,8 @@ class Enemy extends Entity2D {
         
         if (playerEntity.invincibleCounter == 0)
             playerEntity.life += lifeDelta;
+
+        sound.play(soundToPlay);
 
         return scoreCount;
     }

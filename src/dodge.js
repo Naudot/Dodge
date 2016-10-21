@@ -1,6 +1,8 @@
 'use strict';
 
 var graphics;
+var music;
+var sound;
 var clock;
 var texture;
 
@@ -28,6 +30,17 @@ class Dodge {
 		let canvas = document.getElementById('game-canvas');
 		graphics = new Yaje.Graphics();
 		if (graphics.initialize(canvas)) {
+
+			music = new Yaje.MusicPlayer();
+			music.register('mainMusic', 'assets/musics/Creepy Circus Music - Old Popcorn Stand.mp3');
+			music.musics['mainMusic'].volume = 0.1;
+			music.play('mainMusic');
+
+			sound = new Yaje.SoundPlayer();
+			sound.register('pepSound1', 'assets/sounds/pepSound1.mp3', 3);
+			sound.register('phaserUp4', 'assets/sounds/phaserUp4.mp3', 3);
+			sound.register('pepSound3', 'assets/sounds/pepSound3.mp3', 3);
+
 			clock = new Yaje.Clock();
 			texture = graphics.createTexture('assets/textures/sheet.png');
 
@@ -65,7 +78,7 @@ class Dodge {
 		entities.splice(enemyIndex++, 1);
 	}
 	collideWithEnemy(enemyEntity) {
-		return enemyEntity.collideWith(playerEntity);
+		return enemyEntity.collideWith(playerEntity, sound);
 	}
 	updateEnemyPop() {
 		lastPoped += clock.deltaTime;
