@@ -128,6 +128,8 @@ class Dodge {
 		
 		$('#game-current-score').text(Math.round(scoreUpdate) + ' point' + (Math.round(scoreUpdate) > 1 ? 's' : ''));
 		$('#game-best-score').text(Math.round(bestScore) + ' point' + (Math.round(bestScore) > 1 ? 's' : ''));
+
+		$('#game-current-sps').text(Math.round(scoreUpdate / timeUpdate) + ' s/s');
 	}
 
 	/*

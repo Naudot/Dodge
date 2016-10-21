@@ -26,6 +26,21 @@
 		3px 3px 3px black;
 }
 
+#ui-sps {
+	color:white;
+	position:absolute;
+	margin:0;
+	left:600px;
+	top:65px;
+	font-size:1.2em;
+	text-shadow:
+		1px 1px black,
+		-1px 1px black,
+		1px -1px black,
+		-1px -1px black,
+		3px 3px 3px black;
+}
+
 #ui-time {
 	color:white;
 	position:absolute;
@@ -103,6 +118,7 @@
 		<div id="game-container">
 			<canvas id="game-canvas"></canvas>
 			<p id="ui-score">Score (best): <span id="game-current-score"></span> (<span id="game-best-score"></span>)</p>
+			<p id="ui-sps">Score per second: <span id="game-current-sps"></span></p>
 			<p id="ui-time">Time survived (best): <span id="game-current-time"></span> (<span id="game-best-time"></span>)</p>
 			<p id="ui-player-life">Player life: <span id="game-player-life"></span></p>
 			<p id="ui-infos-white">White: -1 Life ; -1 Score</p>
