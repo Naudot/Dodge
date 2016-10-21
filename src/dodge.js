@@ -8,6 +8,7 @@ var playerEntity;
 var entities = [];
 
 var lastPoped = 0;
+var isLost = false;
 
 var scoreUpdate = 0;
 var timeUpdate = 0;
@@ -41,7 +42,7 @@ class Dodge {
 	}
 
 	/*
-	Enemy Handling
+	Entities handling
 	*/
 	popEnemy() {
 		let enemy_sprite = new Yaje.Sprite(32, 32, texture);
@@ -64,7 +65,28 @@ class Dodge {
 			lastPoped = 0;
 		}
 	}
-	
+	updateEntities() {
+		this.updateEnemyPop();
+		for (let x = 0; x < entities.length; ++x) {
+			entities[x].update(graphics, clock);
+
+			if (entities[x] != playerEntity && playerEntity.boxCollider.intersectWith(entities[x].boxCollider)) {
+				scoreUpdate += this.collideWithEnemy(entities[x]);
+				this.removeEnemy(x);
+			}
+
+			if (entities[x].sprite.position[1] > graphics.canvas.height)
+				this.removeEnemy(x);
+		}
+		this.checkPlayerLife();
+	}
+	checkPlayerLife() {
+		if (playerEntity.life <= 0) {
+			playerEntity.life = 0;
+			isLost = true;
+		}
+	}
+
 	/*
 	Ui Handling
 	*/
@@ -96,10 +118,6 @@ class Dodge {
 		$("#game-current-score").text(Math.round(scoreUpdate) + " point" + (Math.round(scoreUpdate) > 1 ? "s" : ""));
 		$("#game-best-score").text(Math.round(bestScore) + " point" + (Math.round(bestScore) > 1 ? "s" : ""));
 	}
-	updateUi() {
-		this.updatePlayerLife();
-		this.updateScore();
-	}
 
 	/*
 	Update / Draw
@@ -109,20 +127,13 @@ class Dodge {
 		input.update();
 		clock.update();
 
-		this.updateUi();
-		this.updateEnemyPop();
-
-		for (let x = 0; x < entities.length; ++x) {
-			entities[x].update(graphics, clock);
-
-			if (entities[x] != playerEntity && playerEntity.boxCollider.intersectWith(entities[x].boxCollider)) {
-				scoreUpdate += this.collideWithEnemy(entities[x]);
-				this.removeEnemy(x);
-			}
-
-			if (entities[x].sprite.position[1] > graphics.canvas.height)
-				this.removeEnemy(x);
+		if (isLost) {
+			$("#game-message").text("Lost!");
+		} else {
+			this.updateEntities();
+			this.updateScore();
 		}
+		this.updatePlayerLife();
 
 		this.draw();
 	}

@@ -61,6 +61,21 @@
 #ui-infos-green {color:rgb(77, 255, 77);position:absolute;margin:0;left:5px;top:85px;font-size:1.2em;text-shadow:1px 1px black,-1px 1px black,1px -1px black,-1px -1px black,3px 3px 3px black;}
 #ui-infos-blue {color:rgb(77, 77, 255);position:absolute;margin:0;left:5px;top:105px;font-size:1.2em;text-shadow:1px 1px black,-1px 1px black,1px -1px black,-1px -1px black,3px 3px 3px black;}
 
+#ui-message {
+	color:white;
+	position:absolute;
+	margin:0;
+	left:600px;
+	top:300px;
+	font-size:6em;
+	text-shadow:
+		1px 1px black,
+		-1px 1px black,
+		1px -1px black,
+		-1px -1px black,
+		3px 3px 3px black;
+}
+
 #game-canvas {
 	background:black;
 	display:block;
@@ -75,10 +90,11 @@
 			<p id="ui-score">Score (best): <span id="game-current-score"></span> (<span id="game-best-score"></span>)</p>
 			<p id="ui-time">Time survived (best): <span id="game-current-time"></span> (<span id="game-best-time"></span>)</p>
 			<p id="ui-player-life">Player life: <span id="game-player-life"></span></p>
-			<p id="ui-infos-white">White: -1 Life ;   -1 Score</p>
+			<p id="ui-infos-white">White: -1 Life ; -1 Score</p>
 			<p id="ui-infos-red">  Red: +2.5 Life ; +2.5 Score</p>
 			<p id="ui-infos-green">Green: +5 Score</p>
-			<p id="ui-infos-blue"> Blue:  -2 Life ;  +10 Score</p>
+			<p id="ui-infos-blue"> Blue: -2 Life ; +10 Score</p>
+			<p id="ui-message"><span id="game-message"></span></p>
 		</div>
 		<script src="vendor/jquery-2.2.3.min.js"></script>
 		<script src="vendor/gl-matrix-2.3.2.js"></script>
