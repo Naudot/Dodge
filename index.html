@@ -4,14 +4,20 @@
 		<meta charset="utf-8">
 		<title>Dodge</title>
 		<style>
-#game-container{position:relative;width:90%;margin:0 auto;}
-#ui-best-score {
-	color: white;
+
+#game-container {
+	position:relative;
+	width:90%;
+	margin:0 auto;
+}
+
+#ui-score {
+	color:white;
 	position:absolute;
 	margin:0;
-	left:5px;
-	top:5px;
-	font-size: 1.3em;
+	left:600px;
+	top:45px;
+	font-size:1.2em;
 	text-shadow:
 		1px 1px black,
 		-1px 1px black,
@@ -19,12 +25,60 @@
 		-1px -1px black,
 		3px 3px 3px black;
 }
-#game-canvas{background:black;display:block;width:100%}</style>
+
+#ui-time {
+	color:white;
+	position:absolute;
+	margin:0;
+	left:5px;
+	top:5px;
+	font-size:1.2em;
+	text-shadow:
+		1px 1px black,
+		-1px 1px black,
+		1px -1px black,
+		-1px -1px black,
+		3px 3px 3px black;
+}
+
+#ui-player-life {
+	color:white;
+	position:absolute;
+	margin:0;
+	left:600px;
+	top:5px;
+	font-size:2em;
+	text-shadow:
+		1px 1px black,
+		-1px 1px black,
+		1px -1px black,
+		-1px -1px black,
+		3px 3px 3px black;
+}
+
+#ui-infos-white {color:white;position:absolute;margin:0;left:5px;top:45px;font-size:1.2em;text-shadow:1px 1px black,-1px 1px black,1px -1px black,-1px -1px black,3px 3px 3px black;}
+#ui-infos-red {color:rgb(255, 77, 77);position:absolute;margin:0;left:5px;top:65px;font-size:1.2em;text-shadow:1px 1px black,-1px 1px black,1px -1px black,-1px -1px black,3px 3px 3px black;}
+#ui-infos-green {color:rgb(77, 255, 77);position:absolute;margin:0;left:5px;top:85px;font-size:1.2em;text-shadow:1px 1px black,-1px 1px black,1px -1px black,-1px -1px black,3px 3px 3px black;}
+#ui-infos-blue {color:rgb(77, 77, 255);position:absolute;margin:0;left:5px;top:105px;font-size:1.2em;text-shadow:1px 1px black,-1px 1px black,1px -1px black,-1px -1px black,3px 3px 3px black;}
+
+#game-canvas {
+	background:black;
+	display:block;
+	width:100%
+}
+
+	</style>
 	</head>
 	<body>
 		<div id="game-container">
 			<canvas id="game-canvas"></canvas>
-			<p id="ui-best-score">Best score: <span id="game-best-score"></span></p>
+			<p id="ui-score">Score (best): <span id="game-current-score"></span> (<span id="game-best-score"></span>)</p>
+			<p id="ui-time">Time survived (best): <span id="game-current-time"></span> (<span id="game-best-time"></span>)</p>
+			<p id="ui-player-life">Player life: <span id="game-player-life"></span></p>
+			<p id="ui-infos-white">White: -1 Life ;   -1 Score</p>
+			<p id="ui-infos-red">  Red: +2.5 Life ; +2.5 Score</p>
+			<p id="ui-infos-green">Green: +5 Score</p>
+			<p id="ui-infos-blue"> Blue:  -2 Life ;  +10 Score</p>
 		</div>
 		<script src="vendor/jquery-2.2.3.min.js"></script>
 		<script src="vendor/gl-matrix-2.3.2.js"></script>

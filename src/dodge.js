@@ -4,16 +4,23 @@ var graphics;
 var clock;
 var texture;
 
-var player_entity;
+var playerEntity;
 var entities = [];
-var scoreUpdate = 0;
+
 var lastPoped = 0;
+
+var scoreUpdate = 0;
+var timeUpdate = 0;
 
 class Dodge {
 	constructor() {
 		this.storage = new Yaje.Storage('dodge');
-		if (!this.storage.best)
-			this.storage.best = 0;
+
+		if (!this.storage.bestScore)
+			this.storage.bestScore = 0;
+		if (!this.storage.bestTime)
+			this.storage.bestTime = 0;
+
 		this.storage.save();
 	}
 	start() {
@@ -23,24 +30,32 @@ class Dodge {
 			clock = new Yaje.Clock();
 			texture = graphics.createTexture('assets/textures/sheet.png');
 
-			let player_sprite = new Yaje.Sprite(32, 32, texture);
-			player_sprite.setTextureCoordinates(0, 0, 0.5, 1.0);
-			player_sprite.setPosition(600, 600);
-			player_entity = new Player(player_sprite);
-			entities.push(player_entity);
+			let playerSprite = new Yaje.Sprite(32, 32, texture);
+			playerSprite.setTextureCoordinates(0, 0, 0.5, 1.0);
+			playerSprite.setPosition(600, 600);
+			playerEntity = new Player(playerSprite);
+			entities.push(playerEntity);
 
 			requestAnimationFrame(() => this.update());
 		}
 	}
+
+	/*
+	Enemy Handling
+	*/
 	popEnemy() {
 		let enemy_sprite = new Yaje.Sprite(32, 32, texture);
 		enemy_sprite.setTextureCoordinates(0.5, 0, 1.0, 1.0);
 		enemy_sprite.setPosition(Math.random() * graphics.canvas.width, 0);
+
 		let enemy_entity = new Enemy(enemy_sprite);
 		entities.push(enemy_entity);
 	}
 	removeEnemy(enemyIndex) {
 		entities.splice(enemyIndex++, 1);
+	}
+	collideWithEnemy(enemyEntity) {
+		return enemyEntity.collideWith(playerEntity);
 	}
 	updateEnemyPop() {
 		lastPoped += clock.deltaTime;
@@ -49,30 +64,61 @@ class Dodge {
 			lastPoped = 0;
 		}
 	}
+	
+	/*
+	Ui Handling
+	*/
+	updatePlayerLife() {
+		$("#game-player-life").text(playerEntity.life);
+	}
 	updateScore() {
-		scoreUpdate += clock.deltaTime;
+		// Time
+		timeUpdate += clock.deltaTime;
 
-		if (scoreUpdate < this.storage.best) {
-			$("#game-best-score").text(Math.round(this.storage.best) + " second" + (scoreUpdate > 1 ? "s" : ""));
-		} else {
-			$("#game-best-score").text(Math.round(scoreUpdate) + " second" + (scoreUpdate > 1 ? "s" : ""));
-			this.storage.best = scoreUpdate;
+		let bestTime = this.storage.bestTime;
+		if (timeUpdate > this.storage.bestTime) { 
+			bestTime = timeUpdate;
+			this.storage.bestTime = timeUpdate;
 			this.storage.save();
 		}
+
+		$("#game-current-time").text(Math.round(timeUpdate) + " second" + (Math.round(timeUpdate) > 1 ? "s" : ""));
+		$("#game-best-time").text(Math.round(bestTime) + " second" + (Math.round(bestTime) > 1 ? "s" : ""));
+
+		// Score
+		let bestScore = this.storage.bestScore;
+		if (scoreUpdate > this.storage.bestScore) { 
+			bestScore = scoreUpdate;
+			this.storage.bestScore = scoreUpdate;
+			this.storage.save();
+		}
+		
+		$("#game-current-score").text(Math.round(scoreUpdate) + " point" + (Math.round(scoreUpdate) > 1 ? "s" : ""));
+		$("#game-best-score").text(Math.round(bestScore) + " point" + (Math.round(bestScore) > 1 ? "s" : ""));
 	}
+	updateUi() {
+		this.updatePlayerLife();
+		this.updateScore();
+	}
+
+	/*
+	Update / Draw
+	*/
 	update() {
 		requestAnimationFrame(() => this.update());
 		input.update();
 		clock.update();
 
-		this.updateScore();
+		this.updateUi();
 		this.updateEnemyPop();
 
 		for (let x = 0; x < entities.length; ++x) {
 			entities[x].update(graphics, clock);
 
-			if (entities[x] != player_entity && player_entity.boxCollider.intersectWith(entities[x].boxCollider))
+			if (entities[x] != playerEntity && playerEntity.boxCollider.intersectWith(entities[x].boxCollider)) {
+				scoreUpdate += this.collideWithEnemy(entities[x]);
 				this.removeEnemy(x);
+			}
 
 			if (entities[x].sprite.position[1] > graphics.canvas.height)
 				this.removeEnemy(x);

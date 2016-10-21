@@ -4,6 +4,8 @@ class Player extends Entity2D {
     constructor(sprite) {
         super(sprite);
         
+		this.life = 100;
+
 		input = new Yaje.Input(document, document.getElementById('game-canvas'));
     }
     handleInputs(graphics, clock) {
