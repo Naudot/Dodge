@@ -34,8 +34,6 @@ class Game {
 			requestAnimationFrame(() => this.update());
 		}
 	}
-
-
 	popEnemy() {
 		let enemy_sprite = new Yaje.Sprite(32, 32, texture);
 		enemy_sprite.setTextureCoordinates(0.5, 0, 1.0, 1.0);
@@ -43,7 +41,6 @@ class Game {
 		let enemy_entity = new Enemy(enemy_sprite);
 		entities.push(enemy_entity);
 	}
-	
 	updateEnemyPop() {
 		lastPoped += clock.deltaTime;
 		if (lastPoped > 0.02) {
@@ -51,7 +48,6 @@ class Game {
 			lastPoped = 0;
 		}
 	}
-
 	updateScore() {
 		scoreUpdate += clock.deltaTime;
 
@@ -63,7 +59,6 @@ class Game {
 			this.storage.save();
 		}
 	}
-
 	update() {
 		requestAnimationFrame(() => this.update());
 		input.update();
@@ -73,11 +68,10 @@ class Game {
 		this.updateEnemyPop();
 
 		for (let x = 0; x < entities.length; ++x)
-			entities[x].update(clock);
+			entities[x].update(graphics, clock);
 
 		this.draw();
 	}
-
 	draw() {
 		graphics.clear();
 
@@ -86,7 +80,6 @@ class Game {
 
 		graphics.display();
 	}
- 
 	resizeCanvas() {
 		let canvas = document.getElementById('game-canvas');
 		let width = window.innerWidth;
