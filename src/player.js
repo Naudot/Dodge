@@ -10,7 +10,7 @@ class Player extends Entity2D {
 		input = new Yaje.Input(document, document.getElementById('game-canvas'));
     }
     handleInputs(graphics, clock) {
-		let move = 400 * clock.deltaTime;
+		let move = 600 * clock.deltaTime;
 		let width = graphics.canvas.width;
 		let height = graphics.canvas.height;
 		
