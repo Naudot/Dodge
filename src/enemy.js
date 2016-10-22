@@ -69,9 +69,10 @@ class Enemy extends Entity2D {
 			lifeDelta -= 1;
         }
         
-        if (playerEntity.invincibleCounter == 0)
-            playerEntity.life += lifeDelta;
-
+        if (playerEntity.invincibleCounter > 0 && lifeDelta < 0)
+            lifeDelta = 0;
+        
+        playerEntity.life += lifeDelta;
         sound.play(soundToPlay);
 
         return scoreCount;
