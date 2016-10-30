@@ -6,10 +6,9 @@ var sound;
 var clock;
 var texture;
 
+var currentWave;
 var playerEntity;
-var entities = [];
 
-var lastPoped = 0;
 var isLost = false;
 
 var scoreUpdate = 0;
@@ -28,34 +27,44 @@ class Dodge {
 	}
 	start() {
 		let canvas = document.getElementById('game-canvas');
+		
+		// Graphics
 		graphics = new Yaje.Graphics();
 		if (graphics.initialize(canvas)) {
 
+			// Music
 			music = new Yaje.MusicPlayer();
 			music.register('mainMusic', 'assets/musics/Creepy Circus Music - Old Popcorn Stand.mp3');
 			music.musics['mainMusic'].volume = 0.1;
 			music.play('mainMusic');
 
+			// Sound
 			sound = new Yaje.SoundPlayer();
 			sound.register('pepSound1', 'assets/sounds/pepSound1.mp3', 3);
 			sound.register('phaserUp4', 'assets/sounds/phaserUp4.mp3', 3);
 			sound.register('pepSound3', 'assets/sounds/pepSound3.mp3', 3);
 
+			// Clock
 			clock = new Yaje.Clock();
+			
+			// Texture
 			texture = graphics.createTexture('assets/textures/sheet.png');
 
+			// Player
 			let playerSprite = new Yaje.Sprite(32, 32, texture);
 			playerSprite.setTextureCoordinates(0, 0, 0.5, 1.0);
 			playerSprite.setPosition(600, 600);
 			playerEntity = new Player(playerSprite);
-			entities.push(playerEntity);
+
+			// Wave
+			currentWave = new Wave(texture);
+			currentWave.playerEntity = playerEntity;
 
 			requestAnimationFrame(() => this.update());
 		}
 	}
 	restart() {
-		entities.splice(0, entities.length);
-		entities.push(playerEntity);
+		currentWave.restart();
 		playerEntity.life = 10;
 		playerEntity.sprite.setPosition(600, 600);
 		timeUpdate = 0;
@@ -64,45 +73,10 @@ class Dodge {
 	}
 
 	/*
-	Entities handling
+	Player handling
 	*/
-	popEnemy() {
-		let enemy_sprite = new Yaje.Sprite(32, 32, texture);
-		enemy_sprite.setTextureCoordinates(0.5, 0, 1.0, 1.0);
-		enemy_sprite.setPosition(Math.random() * graphics.canvas.width, 0);
-
-		let enemy_entity = new Enemy(enemy_sprite);
-		entities.push(enemy_entity);
-	}
-	removeEnemy(enemyIndex) {
-		entities.splice(enemyIndex++, 1);
-	}
-	collideWithEnemy(enemyEntity) {
-		return enemyEntity.collideWith(playerEntity, sound);
-	}
-	updateEnemyPop() {
-		lastPoped += clock.deltaTime;
-		if (lastPoped > 0.02) {
-			this.popEnemy();
-			lastPoped = 0;
-		}
-	}
-	updateEntities() {
-		this.updateEnemyPop();
-		for (let x = 0; x < entities.length; ++x) {
-			entities[x].update(graphics, clock);
-
-			if (entities[x] != playerEntity && playerEntity.boxCollider.intersectWith(entities[x].boxCollider)) {
-				scoreUpdate += this.collideWithEnemy(entities[x]);
-				this.removeEnemy(x);
-			}
-
-			if (entities[x].sprite.position[1] > graphics.canvas.height)
-				this.removeEnemy(x);
-		}
-		this.checkPlayerLife();
-	}
-	checkPlayerLife() {
+	updatePlayer() {
+		playerEntity.update(graphics, clock);
 		if (playerEntity.life <= 0) {
 			playerEntity.life = 0;
 			isLost = true;
@@ -154,7 +128,8 @@ class Dodge {
 		clock.update();
 
 		if (!isLost) {
-			this.updateEntities();
+			currentWave.update(graphics, clock);
+			this.updatePlayer();
 			this.updateScore();
 		}
 		this.updatePlayerLife();
@@ -164,8 +139,9 @@ class Dodge {
 	draw() {
 		graphics.clear();
 
-		for (let x = 0; x < entities.length; ++x)
-			graphics.draw(entities[x].sprite);
+		graphics.draw(playerEntity.sprite);
+		for (let x = 0; x < currentWave.entities.length; ++x)
+			graphics.draw(currentWave.entities[x].sprite);
 
 		graphics.display();
 	}

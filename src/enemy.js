@@ -24,7 +24,7 @@ class Enemy extends Entity2D {
         } else if (rand < 0.15) {
             this.currentColor = ColorEnum.BLUE;
             this.sprite.setColor(0.3, 0.3, 1.0, 1.0);
-        } else if (rand < 0.16) {
+        } else if (rand < 0.151) {
             this.currentColor = ColorEnum.YELLOW;
             this.sprite.setColor(1.0, 1.0, 0.3, 1.0);
         }
